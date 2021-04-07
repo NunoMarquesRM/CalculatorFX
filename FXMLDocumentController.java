@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 
@@ -16,29 +15,10 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML private TextArea textArea;
     @FXML private Label label;
-    /*
-    @FXML private Button btn_resultado;
-    @FXML private Button btn_0;
-    @FXML private Button btn_1;
-    @FXML private Button btn_2;
-    @FXML private Button btn_3;
-    @FXML private Button btn_4;
-    @FXML private Button btn_5;
-    @FXML private Button btn_6;
-    @FXML private Button btn_7;
-    @FXML private Button btn_8;
-    @FXML private Button btn_9;
-    
-    @FXML private Button btn_ponto;
-    @FXML private Button btn_c;
-    
-    @FXML private Button btn_div;
-    @FXML private Button btn_multi;
-    @FXML private Button btn_sub;
-    @FXML private Button btn_soma;
-    */
+
     private String total;
     private String text;
+    private int numNeg;
     private boolean flag, flagDiv, flagPonto;
     
     @FXML private void BA_0(ActionEvent event) {
@@ -79,9 +59,13 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     @FXML private void BA_Sub(ActionEvent event) {
-        if(flag){
+        if(numNeg == 0 && text.equals("")){
+            number("-");
+            numNeg = 1;
+        }
+        else{
             oper('-');
-            flagDiv = false;
+            numNeg = 0;
         }
     }
     @FXML private void BA_Multi(ActionEvent event) {
@@ -97,11 +81,13 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     @FXML private void BA_Ponto(ActionEvent event) {
-        //
+        if(!flagPonto){
+            number(".");
+            flagPonto = true;
+        }
     }
     @FXML private void BA_Resultado(ActionEvent event) {
         oper('=');
-        System.out.println(total);
         reset();
     }
     @FXML private void BA_C(ActionEvent event) {
@@ -118,16 +104,19 @@ public class FXMLDocumentController implements Initializable {
         flag = false;
         flagDiv = false;
         flagPonto = false;
+        numNeg = 0;
     }
     
     private void number(String aux){
+        String str;
         if(text.equals("")){
             text = aux;
+            str = total + text;
         }
         else{
             text = text.concat(aux);
+            str = total + text;
         }
-        String str = total + text;
         textArea.setText(str);
         flag = true;
     }
@@ -172,23 +161,13 @@ public class FXMLDocumentController implements Initializable {
                 if(number < 0){
                     String str = String.valueOf(number);
                     str = str.substring(1, str.length());
-                    total += "-----------------"+"\n "+str+"-"+"\n"+"\n";
+                    total += "-----------------"+"\n "+"-"+str+"\n"+"\n";
                 }
                 else{
                     total += "-----------------"+"\n "+String.valueOf(number)+"\n"+"\n";
                 }
             }
             else{
-                if(c == 'x'){
-                    c = '*';
-                }
-                /*
-                if(c == 'x'){
-                    total += text + " "+ c +" "+ "\n";
-                }
-                else{
-                    total += " "+ c +" "+ text + "\n";
-                }*/
                 total += " "+ c +" "+ text + "\n";
             }
         }
@@ -203,5 +182,6 @@ public class FXMLDocumentController implements Initializable {
         flag = false;
         flagDiv = false;
         flagPonto = false;
+        numNeg = 0;
     }
 }
